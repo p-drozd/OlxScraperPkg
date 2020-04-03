@@ -179,45 +179,25 @@ num_of_offer_sites <- function(webpage){
   return(max_num)
 }
 
-extract_olx_link <- function(url){
-  webpage <- xml2::read_html(url)
-  nodes <- rvest::html_nodes(webpage,
-                             'tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > h3:nth-child(1) > a:nth-child(1)')
-  links <- rvest::html_attr(nodes, 'href')
-  olx_links <- links[stringr::str_detect(links, 'https://www.olx.pl/oferta/')]
-  return(olx_links)
-}
 
-get_link_to_offers <- function(url_start = 'https://www.olx.pl/nieruchomosci/mieszkania/wynajem/wroclaw'){
-  # read webpage
+extract_olx_links <- function(){
+  url_start = 'https://www.olx.pl/nieruchomosci/mieszkania/wynajem/wroclaw'
   webpage_start <- xml2::read_html(url_start)
   # determine number of subsites with offers
   max_site_number <- num_of_offer_sites(webpage_start)
   # empty data frame for results
-  offers <- tibble()
-  print(str_c('Number of subsites with offers: ', as.character(max_site_number)))
+  links <- character()
+  message('Extracting links to offers:\n')
 
-  for( site_number in 1:max_site_number){
-    # url for subsite with offers
-    url <- str_c(url_start, '/?page=', as.character(site_number))
-    # read given url and scrap links to offers
-    webpage <- url %>%
-      read_html()
-    links <- webpage %>%
-      html_nodes('tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > h3:nth-child(1) > a:nth-child(1)') %>%
-      html_attr('href')
-    links <- links[links %>% str_detect('https://www.olx.pl/oferta/')]
-    promoted <- c(promoted, links %>% str_detect('promoted'))
-    # scrap offers from obtained links
-    for(link in links){
-      tmp <- scrap_offer(link)
-      offers <- offers %>% rbind(tmp)
-    }
-    # update progress bar
-    setTxtProgressBar(pb, site_number)
+  for( site_number in 1:2){
+    tmp_url <- paste0(url_start, '/?page=', as.character(site_number))
+    tmp_webpage <- xml2::read_html(tmp_url)
+    tmp_nodes <- rvest::html_nodes(tmp_webpage,
+                                    'tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > h3:nth-child(1) > a:nth-child(1)')
+    tmp_links <- rvest::html_attr(tmp_nodes, 'href')
+    tmp_links <- tmp_links[stringr::str_detect(tmp_links,
+                                               'https://www.olx.pl/oferta/')]
+    links <- c(links, tmp_links)
   }
-  offers$wyrozniona = promoted
-  # close progress bar
-  close(pb)
-  return(offers)
+  return(links)
 }
