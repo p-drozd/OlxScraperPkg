@@ -188,8 +188,8 @@ extract_olx_links <- function(){
   # empty data frame for results
   links <- character()
   message('Extracting links to offers:\n')
-
-  for( site_number in 1:2){
+  p <- dplyr::progress_estimated(n = max_site_number)
+  for( site_number in 1:max_site_number){
     tmp_url <- paste0(url_start, '/?page=', as.character(site_number))
     tmp_webpage <- xml2::read_html(tmp_url)
     tmp_nodes <- rvest::html_nodes(tmp_webpage,
@@ -198,6 +198,9 @@ extract_olx_links <- function(){
     tmp_links <- tmp_links[stringr::str_detect(tmp_links,
                                                'https://www.olx.pl/oferta/')]
     links <- c(links, tmp_links)
+    p$tick()$print()
   }
   return(links)
 }
+
+
