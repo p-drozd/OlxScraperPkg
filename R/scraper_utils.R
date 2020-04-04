@@ -208,6 +208,7 @@ extract_olx_links <- function(){
     links <- c(links, tmp_links)
     p$tick()$print()
   }
+  links <- unique(links)
   return(links)
 }
 
