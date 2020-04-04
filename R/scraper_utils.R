@@ -195,7 +195,7 @@ extract_olx_links <- function(){
   max_site_number <- num_of_offer_sites(webpage_start)
   # empty data frame for results
   links <- character()
-  print('Extracting links to offers:\n')
+  cat('Extracting links to offers:\n')
   p <- dplyr::progress_estimated(n = max_site_number)
   for( site_number in 1:max_site_number){
     tmp_url <- paste0(url_start, '/?page=', as.character(site_number))
