@@ -157,8 +157,8 @@ olx_tab <- function(webpage){
   tab <- extract_table(webpage) %>%
     dplyr::mutate(czynsz_dodatkowo = h_rent(czynsz_dodatkowo),
            powierzchnia = h_size(powierzchnia),
-           liczba_pokoi = stringr::str_replace(liczba_pokoi, 'Kwalerka', '1'),
-           liczba_pokoi = readr::parse_integer(liczba_pokoi))
+           liczba_pokoi = stringr::str_replace(liczba_pokoi, 'Kawalerka', '1'),
+           liczba_pokoi = readr::parse_number(liczba_pokoi))
 
 
   result <- tibble::tibble('czynsz' = if_empty(tab$czynsz_dodatkowo),
@@ -195,7 +195,7 @@ extract_olx_links <- function(){
   max_site_number <- num_of_offer_sites(webpage_start)
   # empty data frame for results
   links <- character()
-  message('Extracting links to offers:\n')
+  print('Extracting links to offers:\n')
   p <- dplyr::progress_estimated(n = max_site_number)
   for( site_number in 1:max_site_number){
     tmp_url <- paste0(url_start, '/?page=', as.character(site_number))
