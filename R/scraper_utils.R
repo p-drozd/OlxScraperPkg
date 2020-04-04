@@ -1,4 +1,5 @@
 library(magrittr)
+library(rlang)
 
 
 #' Function downloads text from given css selector
@@ -58,7 +59,7 @@ creation_date <- function(webpage){
   result <- webpage %>%
     content_text('.offer-titlebox__details > em:nth-child(2)') %>%
     stringr::str_extract('[:digit:]{1,2}\\s[:alpha:]+\\s[:digit:]{4}') %>%
-    readr::parse_date('%d %B %Y', locale = locale('pl'))
+    readr::parse_date('%d %B %Y', locale = readr::locale('pl'))
   if(is_empty(result)){result <- NA}
   return(result)
 }
@@ -127,7 +128,7 @@ extract_table <- function(webpage){
     dplyr::select(X1, X2) %>%
     dplyr::filter(!(stringr::str_detect(X1, '\\n\t') |
                       stringr::str_length(X1) == 0)) %>%
-    dplyr::spread(X1, X2) %>%
+    tidyr::spread(X1, X2) %>%
     janitor::clean_names()
 
   return(tab)
@@ -137,23 +138,24 @@ extract_table <- function(webpage){
 h_rent <- function(value_PLN){
   value_PLN %>%
     stringr::str_extract('[:digit:]+,[:digit:]+|[:digit:]+') %>%
-    readr::parse_double(locale = locale(decimal_mark = ','))
+    readr::parse_double(locale = readr::locale(decimal_mark = ','))
 }
 
 h_size <- function(size_m){
   size_m %>%
     stringr::str_extract('[:digit:]+,[:digit:]+|[:digit:]+') %>%
-    readr::parse_double(locale = locale(decimal_mark = ','))
+    readr::parse_double(locale = readr::locale(decimal_mark = ','))
 }
 
 
 olx_tab <- function(webpage){
   tab <- extract_table(webpage) %>%
-    mutate(czynsz_dodatkowo = h_rent(czynsz_dodatkowo),
+    dplyr::mutate(czynsz_dodatkowo = h_rent(czynsz_dodatkowo),
            powierzchnia = h_size(powierzchnia),
-           liczba_pokoi = parse_number(liczba_pokoi))
+           liczba_pokoi = dplyr::case_when(stringr::str_to_lower(liczba_pokoi) == 'kawalerka' ~ 1,
+                                  TRUE ~ readr::parse_number(liczba_pokoi)))
 
-  result <- tibble('czynsz' = if_empty(tab$czynsz_dodatkowo),
+  result <- tibble::tibble('czynsz' = if_empty(tab$czynsz_dodatkowo),
                    'liczba_pokoi' = if_empty(tab$liczba_pokoi),
                    'oferta_od' = if_empty(tab$oferta_od),
                    'powierzchnia' = if_empty(tab$powierzchnia),
