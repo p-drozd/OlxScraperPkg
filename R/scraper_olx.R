@@ -60,39 +60,16 @@ scrap_offer <- function(url){
 #' @export
 #'
 #' @examples
-get_offers <- function(url_start = 'https://www.olx.pl/nieruchomosci/mieszkania/wynajem/wroclaw'){
-  # read webpage
-  webpage_start <- url_start %>%
-    read_html()
-  # determine number of subsites with offers
-  max_site_number <- num_of_offer_sites(webpage_start)
-  # empty data frame for results
-  offers <- tibble()
-  print(str_c('Number of subsites with offers: ', as.character(max_site_number)))
-  pb <- txtProgressBar(min = 0, max = max_site_number, style = 3)
-  promoted <- logical()
-  for( site_number in 1:max_site_number){
-    # url for subsite with offers
-    url <- str_c(url_start, '/?page=', as.character(site_number))
-    # read given url and scrap links to offers
-    webpage <- url %>%
-      read_html()
-    links <- webpage %>%
-      html_nodes('tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(2) > div:nth-child(1) > h3:nth-child(1) > a:nth-child(1)') %>%
-      html_attr('href')
-    links <- links[links %>% str_detect('https://www.olx.pl/oferta/')]
-    promoted <- c(promoted, links %>% str_detect('promoted'))
-    # scrap offers from obtained links
-    for(link in links){
-      tmp <- scrap_offer(link)
-      offers <- offers %>% rbind(tmp)
-    }
-    # update progress bar
-    setTxtProgressBar(pb, site_number)
+get_offers <- function(links = NA){
+  if(is.na(links)){links <- extract_olx_links()}
+  offers <- tibble::tibble()
+  message('Extracting offers:/n')
+  p <- dplyr::progress_estimated(n = length(links))
+  for( link in links){
+    tmp_offer <- scrap_offer(link)
+    offers <- dplyr::bind_rows(offers, tmp_offer)
+    p$tick()$print()
   }
-  offers$wyrozniona = promoted
-  # close progress bar
-  close(pb)
   return(offers)
 }
 
