@@ -63,7 +63,7 @@ scrap_offer <- function(url){
 get_offers <- function(links = NA){
   if(is.na(links)){links <- extract_olx_links()}
   offers <- tibble::tibble()
-  message('Extracting offers:/n')
+  message('Extracting offers:\n')
   p <- dplyr::progress_estimated(n = length(links))
   for( link in links){
     tmp_offer <- scrap_offer(link)

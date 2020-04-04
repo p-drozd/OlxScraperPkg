@@ -157,8 +157,9 @@ olx_tab <- function(webpage){
   tab <- extract_table(webpage) %>%
     dplyr::mutate(czynsz_dodatkowo = h_rent(czynsz_dodatkowo),
            powierzchnia = h_size(powierzchnia),
-           liczba_pokoi = dplyr::case_when(stringr::str_to_lower(liczba_pokoi) == 'kawalerka' ~ 1,
-                                  TRUE ~ readr::parse_number(liczba_pokoi)))
+           liczba_pokoi = stringr::str_replace(liczba_pokoi, 'Kwalerka', '1'),
+           liczba_pokoi = readr::parse_integer(liczba_pokoi))
+
 
   result <- tibble::tibble('czynsz' = if_empty(tab$czynsz_dodatkowo),
                    'liczba_pokoi' = if_empty(tab$liczba_pokoi),
