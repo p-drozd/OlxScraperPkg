@@ -19,4 +19,5 @@ Imports: rvest,
     readr,
     tibble,
     dplyr,
-    janitor
+    janitor,
+    tidyr
