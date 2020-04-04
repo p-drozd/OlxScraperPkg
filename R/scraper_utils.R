@@ -51,6 +51,11 @@ id <- function(webpage){
       content_text('.offer-titlebox__details > em:nth-child(2) > small:nth-child(2)') %>%
       readr::parse_number()
   }
+  if(is_empty(result)){
+    result <- webpage %>%
+      content_text('.offer-titlebox__details > em:nth-child(2) > small:nth-child(3)') %>%
+      readr::parse_number()
+  }
   result <- if_empty(result)
   return(result)
 }
