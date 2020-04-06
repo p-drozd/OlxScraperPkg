@@ -34,12 +34,12 @@ id <- function(webpage){
   text <- content_text(webpage,
                          '.offer-titlebox__details > em:nth-child(2) > small:nth-child(1)')
   result <- readr::parse_number(text)
-  if(is_empty(result)){
+  if(rlang::is_empty(result)){
     text <- content_text(webpage,
                          '.offer-titlebox__details > em:nth-child(2) > small:nth-child(2)')
     result <- readr::parse_number(text)
   }
-  if(is_empty(result)){
+  if(rlang::is_empty(result)){
     text <- content_text(webpage,
                          '.offer-titlebox__details > em:nth-child(2) > small:nth-child(3)')
     result <- readr::parse_number(text)
