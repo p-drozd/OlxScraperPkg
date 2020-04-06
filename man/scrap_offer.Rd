@@ -2,16 +2,18 @@
 % Please edit documentation in R/scraper_olx.R
 \name{scrap_offer}
 \alias{scrap_offer}
-\title{scrap_offer scraps information from flat renting offer on OLX.PL}
+\title{Scrapes olx flat rental offer.}
 \usage{
 scrap_offer(url)
 }
 \arguments{
-\item{url}{- url of offer that you want to scrap}
+\item{url}{url to olx offer}
 }
 \value{
-A tibble containing data about offer
+tibble with data about specific offer
 }
 \description{
-scrap_offer scraps information from flat renting offer on OLX.PL
+Scrapes olx flat rental offer and returns tibble containing alee
+  information about offer. If some data is missing NA is imputed. Works for
+  polish version of olx.
 }

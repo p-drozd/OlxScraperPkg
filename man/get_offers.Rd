@@ -2,23 +2,18 @@
 % Please edit documentation in R/scraper_olx.R
 \name{get_offers}
 \alias{get_offers}
-\title{get_offers scraps flat renting offers posted on OLX.pl}
+\title{Scraps flat renting offers posted on OLX.pl available at given moment.}
 \usage{
-
-  get_offers(url_start = "https://www.olx.pl/nieruchomosci/mieszkania/wynajem/wroclaw")
+get_offers(links = NA)
 }
 \arguments{
-\item{url_start}{starting url, default one is for site with offers from
-Wrocław}
+\item{links}{character vector contatining links to offers}
 }
 \value{
 A tibble containing data about offers
 }
 \description{
-It starts at given url, determines how many sites with links to offers are
-ther, scraps links to offers and than by crawling from link to link
-downloads date about offers.
-}
-\details{
-Some links points to offers on sites other than OLX. Those links are ommited.
+If links = NA then function scraps links to offers and than by
+  crawling from link to link downloads date about offers. Some links points
+  to offers on sites other than OLX. Those links are ommited.
 }

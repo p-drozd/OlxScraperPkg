@@ -20,4 +20,5 @@ Imports: rvest,
     tibble,
     dplyr,
     janitor,
-    tidyr
+    tidyr,
+    xml2

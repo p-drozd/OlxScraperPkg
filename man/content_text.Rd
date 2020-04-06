@@ -2,19 +2,19 @@
 % Please edit documentation in R/scraper_utils.R
 \name{content_text}
 \alias{content_text}
-\title{Function downloads text from given css selector}
+\title{Extracts text from html object given css selector}
 \usage{
 content_text(webpage, css_sel)
 }
 \arguments{
-\item{webpage}{- rvest object read_html}
+\item{webpage}{xml2 object read_html}
 
-\item{css_sel}{- css selector or xpath pointing to text that supposed to
+\item{css_sel}{css selector or xpath pointing to text that supposed to
 be downloaded}
 }
 \value{
-- A character.
+A character.
 }
 \description{
-Function downloads text from given css selector
+Extracts text from html object given css selector
 }

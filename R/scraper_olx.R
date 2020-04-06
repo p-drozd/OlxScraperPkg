@@ -1,12 +1,14 @@
 
-#' Title
+#' Scrapes olx flat rental offer.
 #'
-#' @param url
+#' @description Scrapes olx flat rental offer and returns tibble containing alee
+#'   information about offer. If some data is missing NA is imputed. Works for
+#'   polish version of olx.
 #'
-#' @return
+#' @param url url to olx offer
+#'
+#' @return tibble with data about specific offer
 #' @export
-#'
-#' @examples
 scrap_offer <- function(url){
   webpage <- xml2::read_html(url)
 
@@ -45,21 +47,17 @@ scrap_offer <- function(url){
 
 
 
-#' get_offers scraps flat renting offers posted on OLX.pl
+#' Scraps flat renting offers posted on OLX.pl available at given moment.
 #'
-#' It starts at given url, determines how many sites with links to offers are
-#' ther, scraps links to offers and than by crawling from link to link
-#' downloads date about offers.
+#' @description  If links = NA then function scraps links to offers and than by
+#'   crawling from link to link downloads date about offers. Some links points
+#'   to offers on sites other than OLX. Those links are ommited.
 #'
-#' Some links points to offers on sites other than OLX. Those links are ommited.
+#' @param links character vector contatining links to offers
 #'
-#' @param url_start starting url, default one is for site with offers from
-#' Wrocław
 #'
 #' @return A tibble containing data about offers
 #' @export
-#'
-#' @examples
 get_offers <- function(links = NA){
   if(is.na(links)){links <- extract_olx_links()}
   offers <- tibble::tibble()

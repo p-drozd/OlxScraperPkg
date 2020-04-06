@@ -2,13 +2,16 @@
 % Please edit documentation in R/scraper_utils.R
 \name{if_empty}
 \alias{if_empty}
-\title{Title}
+\title{Determines whether object is empty, if so assigns NA to it.}
 \usage{
 if_empty(obj)
 }
 \arguments{
-\item{obj}{}
+\item{obj}{atomic vector, list, matrix or data frame}
+}
+\value{
+passed object or NA if object is empty
 }
 \description{
-Title
+Determines whether object is empty, if so assigns NA to it.
 }
